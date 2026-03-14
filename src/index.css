@@ -1,0 +1,128 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+/* Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #1e293b;
+    border-radius: 10px;
+}
+
+/* Menu */
+.menu-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: #8b7b64;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    color: #94a3b8;
+    transition: 0.3s;
+}
+
+.nav-item:hover {
+    background: rgba(19, 91, 236, 0.1);
+    color: #135bec;
+}
+
+.nav-item.active {
+    background: #135bec;
+    color: white;
+}
+
+/* Cards */
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.card-icon {
+    background: transparent;
+    padding: 1px;
+    border-radius: 1px;
+    color: #135bec;
+    gap: 23px;
+    
+}
+.dark .card {
+    background: #151c2c;
+}
+
+.card-label {
+    font-size: 14px;
+    color: #94a3b8;
+}
+.card-value {
+    font-size: 26px;
+    font-weight: bold;
+}
+
+/* Activity */
+.activity-item {
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 14px;
+}
+.activity-item span {
+    display: block;
+    font-size: 11px;
+    opacity: 0.6;
+}
+.activity-item.critical { background: rgba(239,68,68,0.1); color:#ef4444;}
+.activity-item.info { background: rgba(59,130,246,0.1); color:#3b82f6;}
+.activity-item.system { background: rgba(16,185,129,0.1); color:#10b981;}
+
+/* Buttons */
+.icon-btn {
+    background: #135bec;
+    color: white;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+/* Notification */
+.notif-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: red;
+    color: white;
+    font-size: 10px;
+    padding: 2px 5px;
+    border-radius: 999px;
+}
+
+/* Profile */
+.profile-menu {
+    position: absolute;
+    right: 0;
+    top: 45px;
+    background: white;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+.dark .profile-menu { background: #151c2c; }
+.profile-menu a {
+    display:block;
+    padding:5px 10px;
+}
+.profile-menu a:hover {
+    background: rgba(19,91,236,0.1);
+}
