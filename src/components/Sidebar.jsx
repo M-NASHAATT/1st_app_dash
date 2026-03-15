@@ -24,7 +24,13 @@ export default function Sidebar({ isOpen, setIsOpen }) {
         <div className="p-6 flex items-center justify-between border-b border-primary/10">
           <div className="flex items-center gap-3">
             <div className="size-10 rounded-lg bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/20">
-              <span className="material-symbols-outlined">shield</span>
+              <div className="size-10 flex items-center justify-center">
+                <img 
+                  src="/logo.svg" 
+                  alt="Blue Sentinel Logo" 
+                  className="w-full h-full object-contain" 
+                />
+              </div>
             </div>
             <div>
               <h1 className="text-lg font-bold leading-none text-slate-900 dark:text-white">Blue Sentinel</h1>
