@@ -22,8 +22,8 @@ export default function Sidebar({ isOpen, setIsOpen }) {
       >
         {/* LOGO HEADER */}
         <div className="p-6 flex items-center justify-between border-b border-primary/10">
-          <div className="flex items-center gap-3">
-            <div className="size-10 rounded-lg bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/20">
+           <div className="flex items-center gap-3">
+            
               <div className="size-10 flex items-center justify-center">
                 <img 
                   src="/logo.svg" 
@@ -31,7 +31,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
                   className="w-full h-full object-contain" 
                 />
               </div>
-            </div>
+            
             <div>
               <h1 className="text-lg font-bold leading-none text-slate-900 dark:text-white">Blue Sentinel</h1>
               <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-1">Admin Panel</p>
