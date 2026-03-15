@@ -22,28 +22,33 @@ export default function Sidebar({ isOpen, setIsOpen }) {
       >
         {/* LOGO HEADER */}
         <div className="p-6 flex items-center justify-between border-b border-primary/10">
-           <div className="flex items-center gap-3">
+          
+          {/* Logo and Text Wrapper */}
+          <div className="flex items-center gap-3">
             
-              <div className="size-10 flex items-center justify-center">
-                <img 
-                  src="/logo.svg" 
-                  alt="Blue Sentinel Logo" 
-                  className="w-full h-full object-contain" 
-                />
-              </div>
+            {/* The Logo (Added shrink-0 so it never gets squished) */}
+            <div className="w-10 h-10 shrink-0 flex items-center justify-center">
+              <img 
+                src="src/public/logo.svg" 
+                alt="Blue Sentinel Logo" 
+                className="w-full h-full object-contain" 
+              />
+            </div>
             
+            {/* The Text */}
             <div>
               <h1 className="text-lg font-bold leading-none text-slate-900 dark:text-white">Blue Sentinel</h1>
               <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-1">Admin Panel</p>
             </div>
+
           </div>
-          
-          {/* Close button for mobile only */}
+
+          {/* Mobile Close Button (Make sure this isn't deleted!) */}
           <button onClick={() => setIsOpen(false)} className="lg:hidden text-slate-400 hover:text-primary">
             <span className="material-symbols-outlined">close</span>
           </button>
+          
         </div>
-
         {/* NAVIGATION LINKS */}
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto custom-scrollbar">
           
