@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import myLogo from '../assets/brand-logo.svg'; // <-- EXACTLY THIS
+import myLogo from '../assets/sidebar-logo.svg'; // <-- MUST MATCH EXACTLY
 
 
 export default function Sidebar({ isOpen, setIsOpen }) {
