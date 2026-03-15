@@ -5,7 +5,7 @@ import { Toaster } from 'react-hot-toast';
 
 // Components
 import Sidebar from './components/Sidebar';
-import Header from './components/header';
+import TopHeader from './components/TopHeader';
 
 // Pages
 import Dashboard from './pages/Dashboard';
@@ -74,7 +74,7 @@ export default function App() {
         <main className="flex-1 flex flex-col overflow-hidden">
           
           {/* HEADER */}
-          <Header 
+          <TopHeader 
             toggleDark={toggleDark} 
             isProfileOpen={isProfileOpen} 
             setIsProfileOpen={setIsProfileOpen} 
