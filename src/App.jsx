@@ -12,7 +12,7 @@ import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
 import UserDetails from './pages/UserDetails';
 import GeneralApp from './pages/GeneralApp'; // Your General App!
-import Reports from './pages/Reports';
+import Reports from './pages/ReportsPage';
 import Rewards from './pages/Rewards';
 import AddReward from './pages/AddReward';
 import ActivityLogs from './pages/ActivityLogs';
