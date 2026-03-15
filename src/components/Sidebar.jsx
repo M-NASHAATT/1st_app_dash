@@ -29,7 +29,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
             {/* The Logo (Added shrink-0 so it never gets squished) */}
             <div className="w-10 h-10 shrink-0 flex items-center justify-center">
               <img 
-                src="src/public/logo.svg" 
+                src="public/logo.svg" 
                 alt="Blue Sentinel Logo" 
                 className="w-full h-full object-contain" 
               />
