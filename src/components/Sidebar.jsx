@@ -1,4 +1,6 @@
 import { NavLink } from 'react-router-dom';
+import logoImage from '../assets/logo.svg'; // 1. IMPORT THE IMAGE HERE
+
 
 export default function Sidebar({ isOpen, setIsOpen }) {
   // Close the sidebar automatically when a link is clicked on mobile!
@@ -29,7 +31,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
             {/* The Logo (Added shrink-0 so it never gets squished) */}
             <div className="w-10 h-10 shrink-0 flex items-center justify-center">
               <img 
-                src="public/logo.svg" 
+                src={logoImage}
                 alt="Blue Sentinel Logo" 
                 className="w-full h-full object-contain" 
               />
