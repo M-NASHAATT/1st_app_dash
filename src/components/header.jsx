@@ -1,4 +1,7 @@
+import { useNavigate } from 'react-router-dom';
+
 export default function Header({ toggleDark, isProfileOpen, setIsProfileOpen, toggleSidebar }) {
+  const navigate = useNavigate();
   return (
     <header className="h-16 shrink-0 flex items-center justify-between px-4 md:px-8 border-b border-primary/10 backdrop-blur-md bg-white/70 dark:bg-[#101622]/70 sticky top-0 z-40">
       
@@ -53,12 +56,35 @@ export default function Header({ toggleDark, isProfileOpen, setIsProfileOpen, to
 
           {isProfileOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-[#151c2c] shadow-xl rounded-xl border border-primary/10 flex flex-col p-2 z-50">
-              <a href="#" className="p-2 text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors text-slate-700 dark:text-slate-300">My Profile</a>
-              <a href="#" className="p-2 text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors text-slate-700 dark:text-slate-300">Settings</a>
+              
+              {/* CLICKING THIS TAKES YOU TO THE NEW PROFILE PAGE */}
+              <button 
+                onClick={() => {
+                  navigate('/profile');
+                  setIsProfileOpen(false); // Close the dropdown
+                }}
+                className="p-2 text-left text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors text-slate-700 dark:text-slate-300"
+              >
+                My Profile
+              </button>
+              
+              {/* CLICKING THIS TAKES YOU TO SETTINGS */}
+              <button 
+                onClick={() => {
+                  navigate('/settings');
+                  setIsProfileOpen(false); // Close the dropdown
+                }}
+                className="p-2 text-left text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors text-slate-700 dark:text-slate-300"
+              >
+                Settings
+              </button>
+              
               <div className="h-px bg-slate-100 dark:bg-slate-800 my-1"></div>
-              <a href="#" className="p-2 text-sm font-bold text-red-500 hover:bg-red-500/10 rounded-lg transition-colors">Logout</a>
+              <button className="p-2 text-left text-sm font-bold text-red-500 hover:bg-red-500/10 rounded-lg transition-colors">
+                Logout
+              </button>
             </div>
-          )}
+)}
         </div>
       </div>
     </header>

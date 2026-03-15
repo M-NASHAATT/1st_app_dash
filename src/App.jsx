@@ -17,6 +17,8 @@ import Rewards from './pages/Rewards';
 import AddReward from './pages/AddReward';
 import ActivityLogs from './pages/ActivityLogs';
 import Settings from './pages/Settings';
+import Profile from './pages/Profile';
+
 
 
 export default function App() {
@@ -91,6 +93,8 @@ export default function App() {
               <Route path="/add-reward" element={<AddReward />} />
               <Route path="/logs" element={<ActivityLogs />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/profile" element={<Profile />} />
+
             </Routes>
           </div>
 
