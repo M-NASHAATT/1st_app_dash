@@ -18,6 +18,7 @@ import AddReward from './pages/AddReward';
 import ActivityLogs from './pages/ActivityLogs';
 import Settings from './pages/Settings';
 
+
 export default function App() {
   // States for interactive UI
   const [isProfileOpen, setIsProfileOpen] = useState(false);
