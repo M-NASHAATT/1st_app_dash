@@ -124,9 +124,9 @@ export default function UserDetails() {
             Reward History
           </button>
           
-          <button className="px-6 py-3 text-slate-500 dark:text-slate-400 font-medium text-sm hover:text-slate-900 dark:hover:text-white transition-colors whitespace-nowrap">
+          {/* <button className="px-6 py-3 text-slate-500 dark:text-slate-400 font-medium text-sm hover:text-slate-900 dark:hover:text-white transition-colors whitespace-nowrap">
             Safety Verification
-          </button>
+          </button> */}
         </div>
 
         {/* ========================================= */}
