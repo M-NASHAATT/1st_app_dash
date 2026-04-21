@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import Button from '../components/ui/Button';
+import Input from '../components/ui/Input';
 
 export default function Settings() {
   // 1. STATE FOR TABS
@@ -94,22 +96,22 @@ export default function Settings() {
                     <h3 className="text-lg font-bold text-slate-900 dark:text-white">General App Details</h3>
                   </div>
                   <div className="bg-white dark:bg-[#1c2433] p-6 rounded-xl border border-slate-200 dark:border-border-dark grid grid-cols-1 md:grid-cols-2 gap-6 shadow-sm">
-                    <div className="space-y-2">
-                      <label className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Application Name</label>
-                      <input 
-                        name="appName" value={settings.appName} onChange={handleChange}
-                        className="w-full bg-slate-50 dark:bg-[#111722] border border-slate-200 dark:border-border-dark rounded-lg px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none transition-all" 
-                        type="text" 
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Support Email</label>
-                      <input 
-                        name="supportEmail" value={settings.supportEmail} onChange={handleChange}
-                        className="w-full bg-slate-50 dark:bg-[#111722] border border-slate-200 dark:border-border-dark rounded-lg px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none transition-all" 
-                        type="email" 
-                      />
-                    </div>
+                    
+                    <Input 
+                          label="Application Name"
+                          name="appName" 
+                          value={settings.appName} 
+                          onChange={handleChange} 
+                        />
+
+                        <Input 
+                          label="Support Email"
+                          type="email"
+                          name="supportEmail" 
+                          value={settings.supportEmail} 
+                          onChange={handleChange} 
+                        />
+                        
                     <div className="space-y-2 md:col-span-2">
                       <label className="text-sm font-semibold text-slate-500 uppercase tracking-wider">API Endpoint URL</label>
                       <div className="relative">
@@ -278,17 +280,19 @@ export default function Settings() {
         <p className="text-sm text-slate-500 italic flex items-center gap-2">
           <span className="material-symbols-outlined text-sm">history</span> Last updated: Just now
         </p>
-        <div className="flex items-center gap-4">
-          <button className="px-6 py-2.5 rounded-lg border border-slate-200 dark:border-border-dark font-bold text-sm text-slate-700 dark:text-white hover:bg-slate-50 dark:hover:bg-[#1c2433] transition-colors">
-            Discard Changes
-          </button>
-          <button 
-                            onClick={() => toast.success('System settings updated successfully!')} // <--- ADD THIS onClick
-                            className="px-8 py-2.5 rounded-lg bg-primary text-white font-bold text-sm shadow-xl shadow-primary/30 hover:brightness-110 active:scale-[0.98] transition-all flex items-center gap-2"
-                            >
-                            <span className="material-symbols-outlined text-lg">save</span> Save Changes
-                            </button>
-        </div>
+
+            <div className="flex items-center gap-4">
+              
+              <Button variant="outline">
+                Discard Changes
+              </Button>
+              
+              <Button variant="primary" icon="save" onClick={() => toast.success('System settings updated successfully!')}>
+                
+                Save Changes
+              </Button>
+
+            </div>
       </footer>
 
     </div>

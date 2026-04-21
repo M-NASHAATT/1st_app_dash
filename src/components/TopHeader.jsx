@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export default function TopHeader({ toggleDark, isProfileOpen, setIsProfileOpen, toggleSidebar }) {
+export default function TopHeader({ toggleDark, isProfileOpen, setIsProfileOpen, toggleSidebar, setIsAuthenticated }) {
   const navigate = useNavigate();
 
   // 1. STATE FOR NOTIFICATIONS
@@ -145,7 +145,16 @@ export default function TopHeader({ toggleDark, isProfileOpen, setIsProfileOpen,
               <button onClick={() => { navigate('/profile'); setIsProfileOpen(false); }} className="p-2 text-left text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors text-slate-700 dark:text-slate-300">My Profile</button>
               <button onClick={() => { navigate('/settings'); setIsProfileOpen(false); }} className="p-2 text-left text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors text-slate-700 dark:text-slate-300">Settings</button>
               <div className="h-px bg-slate-100 dark:bg-slate-800 my-1"></div>
-              <button className="p-2 text-left text-sm font-bold text-red-500 hover:bg-red-500/10 rounded-lg transition-colors">Logout</button>
+              <button 
+                    onClick={() => {
+                      setIsAuthenticated(false);
+                      localStorage.removeItem("isAuthenticated");
+                      navigate('/login');
+                    }}
+                    className="p-2 text-left text-sm font-bold text-red-500 hover:bg-red-500/10 rounded-lg transition-colors w-full"
+                  >
+                    Logout
+                  </button>
             </div>
           )}
         </div>

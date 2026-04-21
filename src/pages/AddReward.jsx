@@ -55,19 +55,7 @@ export default function AddReward() {
                       type="text"
                     />
                   </div>
-                  <div className="flex flex-col gap-2">
-                    <label className="text-sm font-medium text-slate-700 dark:text-white/80">Category</label>
-                    <select 
-                      className="w-full rounded-lg border border-slate-300 dark:border-border-dark bg-slate-50 dark:bg-background-dark/50 p-3 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-[#92a4c9] focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none bg-no-repeat bg-[right_1rem_center]" 
-                      style={{ backgroundImage: "url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2392a4c9%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C/polyline%3E%3C/svg%3E')" }}
-                    >
-                      <option value="">Select Category</option>
-                      <option value="electronics">Electronics</option>
-                      <option value="vouchers">Vouchers</option>
-                      <option value="apparel">Apparel</option>
-                      <option value="exclusive">Exclusive Events</option>
-                    </select>
-                  </div>
+                  
                 </div>
                 <div className="flex flex-col gap-2">
                   <label className="text-sm font-medium text-slate-700 dark:text-white/80">Description</label>
@@ -112,31 +100,7 @@ export default function AddReward() {
             </section>
 
             {/* Offer Details */}
-            <section className="rounded-xl bg-white dark:bg-[#1c2636] p-6 border border-slate-200 dark:border-[#2d3a54]/50 mb-6 shadow-sm">
-              <div className="flex items-center gap-2 mb-6 border-b border-slate-200 dark:border-border-dark pb-4">
-                <span className="material-symbols-outlined text-primary">event</span>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white">Offer Details</h3>
-              </div>
-              <div className="space-y-5">
-                <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium text-slate-700 dark:text-white/80">Expiration Date</label>
-                  <div className="relative">
-                    <input 
-                      className="w-full rounded-lg border border-slate-300 dark:border-border-dark bg-slate-50 dark:bg-background-dark/50 p-3 pl-12 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-[#92a4c9] focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" 
-                      type="date"
-                    />
-                    <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary">calendar_today</span>
-                  </div>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium text-slate-700 dark:text-white/80">Special Conditions</label>
-                  <textarea 
-                    className="w-full rounded-lg border border-slate-300 dark:border-border-dark bg-slate-50 dark:bg-background-dark/50 p-3 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-[#92a4c9] focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all min-h-[80px]" 
-                    placeholder="Any restrictions or specific redemption rules..."
-                  ></textarea>
-                </div>
-              </div>
-            </section>
+            
           </div>
 
           {/* --- RIGHT COLUMN: MEDIA & VISIBILITY --- */}
@@ -184,14 +148,8 @@ export default function AddReward() {
                 
                 {/* Toggle Featured */}
                 <div className="flex items-center justify-between">
-                  <div className="flex flex-col">
-                    <span className="text-sm font-medium text-slate-900 dark:text-white">Is Featured</span>
-                    <span className="text-xs text-slate-500 dark:text-[#92a4c9]">Show in home highlights</span>
-                  </div>
-                  <label className="inline-flex items-center cursor-pointer">
-                    <input className="sr-only peer" type="checkbox" />
-                    <div className="relative w-11 h-6 bg-slate-300 dark:bg-border-dark peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-                  </label>
+                  
+                  
                 </div>
               </div>
 

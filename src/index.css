@@ -58,8 +58,8 @@ body {
     border-radius: 1px;
     color: #135bec;
     gap: 23px;
-    
 }
+
 .dark .card {
     background: #151c2c;
 }
@@ -125,4 +125,34 @@ body {
 }
 .profile-menu a:hover {
     background: rgba(19,91,236,0.1);
+}
+
+/* ========================================================= */
+/* THE NEW TAILWIND CUSTOM CLASSES WE JUST MADE              */
+/* ========================================================= */
+@layer components {
+  /* The grey uppercase column titles */
+  .table-header-cell {
+    @apply px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500;
+  }
+
+  /* The standard padding and alignment for table data */
+  .table-data-cell {
+    @apply px-6 py-4;
+  }
+
+  /* The little square image thumbnail container */
+  .reward-thumb-box {
+    @apply w-12 h-12 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center p-1;
+  }
+
+  /* The gray progress bar background */
+  .stock-bar-bg {
+    @apply flex-1 max-w-[100px] h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden;
+  }
+
+  /* The action buttons (Edit, Hide, Delete) */
+  .action-btn {
+    @apply p-1.5 text-slate-400 rounded-lg transition-all flex items-center justify-center;
+  }
 }
