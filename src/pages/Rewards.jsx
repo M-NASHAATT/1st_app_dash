@@ -1,7 +1,80 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import { rewardService } from '../services/rewardService';
 
 export default function Rewards() {
   const navigate = useNavigate();
+
+  // 1. REAL STATE
+  const [rewardsData, setRewardsData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // 2. FETCH THE DATA
+  useEffect(() => {
+    const fetchRewards = async () => {
+      try {
+        const responseData = await rewardService.getAllRewards();
+        console.log("BACKEND REWARDS RESPONSE:", responseData); // X-RAY
+
+        // The Ultimate Laravel Unwrapper
+        let rewardsArray = [];
+        if (Array.isArray(responseData)) {
+          rewardsArray = responseData;
+        } else if (Array.isArray(responseData?.data?.data)) {
+          rewardsArray = responseData.data.data;
+        } else if (Array.isArray(responseData?.data)) {
+          rewardsArray = responseData.data;
+        } else if (Array.isArray(responseData?.rewards)) {
+          rewardsArray = responseData.rewards;
+        }
+
+        setRewardsData(rewardsArray);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Failed to load rewards:", error);
+        toast.error("Failed to load rewards from server.");
+        setIsLoading(false);
+      }
+    };
+
+    fetchRewards();
+  }, []);
+
+  // Helpers
+  const getStatusColor = (stock) => {
+    if (stock > 10) return "bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400";
+    if (stock > 0) return "bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400";
+    return "bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-400";
+  };
+
+  const getStockBarColor = (stock, maxStock) => {
+    const percentage = (stock / maxStock) * 100;
+    if (percentage > 50) return "bg-primary";
+    if (percentage > 0) return "bg-amber-500";
+    return "bg-slate-400";
+  };
+
+  // 3. DELETE FUNCTION
+  const handleDelete = async (rewardId) => {
+    // Safety check: Ask the admin to confirm before deleting!
+    if (!window.confirm("Are you sure you want to delete this reward? This cannot be undone.")) return;
+
+    // A. Remove it from the screen instantly (Optimistic UI)
+    const previousData = [...rewardsData]; // Save a backup just in case the server fails
+    setRewardsData(rewardsData.filter(item => item.id !== rewardId));
+
+    try {
+      // B. Tell the backend to actually delete it
+      await rewardService.deleteReward(rewardId);
+      toast.success("Reward deleted successfully!");
+    } catch (error) {
+      // C. If the server crashes, put the reward back on the screen!
+      console.error("Failed to delete:", error);
+      toast.error("Failed to delete reward from the server.");
+      setRewardsData(previousData); 
+    }
+  };
 
   return (
     <div className="flex flex-col h-full overflow-y-auto custom-scrollbar bg-background-light dark:bg-background-dark">
@@ -14,261 +87,114 @@ export default function Rewards() {
             <p className="text-slate-500 dark:text-slate-400 mt-1">Configure your store items, inventory, and point exchange rates.</p>
           </div>
           <button 
-            onClick={() => navigate('/add-reward')}
+            onClick={() => navigate('/add-reward')} 
             className="bg-primary hover:bg-primary/90 text-white px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg shadow-primary/20"
           >
             <span className="material-symbols-outlined">add_circle</span> Add New Reward
           </button>
         </div>
 
-        {/* --- SUMMARY METRICS --- */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl flex items-start justify-between shadow-sm">
-            <div>
-              <p className="text-sm font-medium text-slate-500 mb-1">Total Active Rewards</p>
-              <h3 className="text-3xl font-bold text-slate-900 dark:text-white">1,284</h3>
-              <div className="flex items-center gap-1 mt-2 text-emerald-500 text-sm font-bold">
-                <span className="material-symbols-outlined text-sm">trending_up</span> <span>5.2%</span>
-              </div>
-            </div>
-            <div className="bg-primary/10 p-3 rounded-xl text-primary"><span className="material-symbols-outlined text-2xl">loyalty</span></div>
-          </div>
-
-          <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl flex items-start justify-between shadow-sm">
-            <div>
-              <p className="text-sm font-medium text-slate-500 mb-1">Points Redeemed (MTD)</p>
-              <h3 className="text-3xl font-bold text-slate-900 dark:text-white">450.2k</h3>
-              <div className="flex items-center gap-1 mt-2 text-emerald-500 text-sm font-bold">
-                <span className="material-symbols-outlined text-sm">trending_up</span> <span>12.8%</span>
-              </div>
-            </div>
-            <div className="bg-amber-500/10 p-3 rounded-xl text-amber-500"><span className="material-symbols-outlined text-2xl">toll</span></div>
-          </div>
-
-          <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl flex items-start justify-between shadow-sm border-l-4 border-l-red-500">
-            <div>
-              <p className="text-sm font-medium text-slate-500 mb-1">Low Stock Alerts</p>
-              <h3 className="text-3xl font-bold text-slate-900 dark:text-white">12 Items</h3>
-              <div className="flex items-center gap-1 mt-2 text-red-500 text-sm font-bold">
-                <span className="material-symbols-outlined text-sm">warning</span> <span>Immediate action needed</span>
-              </div>
-            </div>
-            <div className="bg-red-500/10 p-3 rounded-xl text-red-500"><span className="material-symbols-outlined text-2xl">inventory_2</span></div>
-          </div>
-        </div>
-
-        {/* --- TOOLBAR & FILTERS --- */}
-        <div className="bg-white dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 mb-6 flex flex-wrap items-center justify-between gap-4">
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="relative">
-              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">filter_list</span>
-              <select className="appearance-none bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg pl-9 pr-8 py-1.5 text-sm focus:ring-primary outline-none text-slate-700 dark:text-slate-300">
-                <option>All Categories</option>
-                <option>Gear</option>
-                <option>Donations</option>
-              </select>
-            </div>
-            <button className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-primary transition-colors px-3 py-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900">
-              <span className="material-symbols-outlined text-base">close</span> Clear Filters
-            </button>
-          </div>
-          <div className="text-sm text-slate-400">
-            Showing <strong>1-10</strong> of 1,284 results
-          </div>
-        </div>
-
         {/* --- DATA TABLE --- */}
-        <div className="bg-white dark:bg-slate-800/30 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm">
+        <div className="bg-white dark:bg-slate-800/30 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm relative min-h-[400px]">
+          
+          {/* LOADING SPINNER */}
+          {isLoading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-white/50 dark:bg-[#151c2c]/50 backdrop-blur-sm z-10">
+              <div className="w-10 h-10 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
+            </div>
+          )}
+
           <div className="overflow-x-auto custom-scrollbar">
             <table className="w-full text-left border-collapse min-w-[900px]">
               
               <thead className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
                 <tr>
-                  {/* CLEANED: Using .table-header-cell */}
-                  <th className="table-header-cell">Reward Item</th>
-                  <th className="table-header-cell text-right">Points Cost</th>
-                  <th className="table-header-cell">Stock Level</th>
-                  <th className="table-header-cell text-center">Status</th>
-                  <th className="table-header-cell text-right">Actions</th>
+                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Reward Item</th>
+                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 text-right">Points Cost</th>
+                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Stock Level</th>
+                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 text-center">Status</th>
+                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 text-right">Actions</th>
                 </tr>
               </thead>
               
               <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
                 
-                {/* ITEM 1 */}
-                <tr className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors group">
-                  <td className="table-data-cell">
-                    <div className="flex items-center gap-4">
-                      {/* CLEANED: Using .reward-thumb-box */}
-                      <div className="reward-thumb-box">
-                        <img alt="Reward" className="rounded-md opacity-80 w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCn215k9MNSK2Dh415isAaq-dDXb_zVb5nJPX-G0TzVWKpUufqmt4Dg2Depzvu2o9jlrjUaZmTFQOM832Xfa7G6Cy7vCgLb05TZwam7XpwIUm_mnA5i2HDiln-G_du3OHQfTC9jMedKO0_Tm1lYhvLieR9Hkr9Q49BU3pgYEDRlq0LqiBQmuteFgaIDczADVm0E9ioXZq2FsNCMkmtyUu1BhzMXM4YiGlbuQxCBcTNrJsIbTAMJ6bXX2-oDINUAhMuxd6XAsWV1vQ"/>
-                      </div>
-                      <div>
-                        <p className="font-bold text-sm text-slate-900 dark:text-white">Premium Water Bottle</p>
-                        <p className="text-xs text-slate-400">SKU: BS-RE-001</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="table-data-cell text-right">
-                    <span className="text-primary font-bold">2,500 pts</span>
-                  </td>
-                  <td className="table-data-cell">
-                    <div className="flex items-center gap-3">
-                      {/* CLEANED: Using .stock-bar-bg */}
-                      <div className="stock-bar-bg">
-                        <div className="h-full bg-primary" style={{ width: "85%" }}></div>
-                      </div>
-                      <span className="text-xs font-bold text-slate-900 dark:text-white">85/100</span>
-                    </div>
-                  </td>
-                  <td className="table-data-cell text-center">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400">
-                      Active
-                    </span>
-                  </td>
-                  <td className="table-data-cell text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      {/* CLEANED: Using .action-btn */}
-                      <button className="action-btn hover:text-primary hover:bg-primary/10"><span className="material-symbols-outlined text-[20px]">edit_note</span></button>
-                      <button className="action-btn hover:text-amber-500 hover:bg-amber-500/10"><span className="material-symbols-outlined text-[20px]">visibility_off</span></button>
-                      <button className="action-btn hover:text-red-500 hover:bg-red-500/10"><span className="material-symbols-outlined text-[20px]">delete_outline</span></button>
-                    </div>
-                  </td>
-                </tr>
+                {!isLoading && rewardsData.length === 0 && (
+                  <tr>
+                    <td colSpan="5" className="text-center py-8 text-slate-500">
+                      No rewards found. Click "Add New Reward" to create one!
+                    </td>
+                  </tr>
+                )}
 
-                {/* ITEM 2 */}
-                <tr className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors group">
-                  <td className="table-data-cell">
-                    <div className="flex items-center gap-4">
-                      <div className="reward-thumb-box">
-                        <img alt="Reward" className="rounded-md opacity-80 w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKbEbIFcK_Dnty1hBg35fOi1bBpTIpcoCj9Ml6lIhmBbEUQpFHGKpgnG2Dyr7JzaqGbozAm4ypjUj7w9HYpshSFWQ7dwxvFPy8HPlK7CSWAPCNuOC-vRvCdAMV9iJ2ex3-cIy2oWRmakSh1ugYUJOkzmGd-sji0Adi1DIL7kQ0iIOho8FQrU2QLmJ5OQgftnWJxFRwWvdnfcbb8_rCmFfeFPyv1pfNozehcJYzSIYuS-HKnrQ0asr50Ftc_m5HIG_3zxyuoSBRMQ"/>
-                      </div>
-                      <div>
-                        <p className="font-bold text-sm text-slate-900 dark:text-white">Charity Donation $10</p>
-                        <p className="text-xs text-slate-400">SKU: BS-RE-042</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="table-data-cell text-right">
-                    <span className="text-primary font-bold">1,000 pts</span>
-                  </td>
-                  <td className="table-data-cell">
-                    <div className="flex items-center gap-3">
-                      <div className="stock-bar-bg">
-                        <div className="h-full bg-slate-400" style={{ width: "100%" }}></div>
-                      </div>
-                      <span className="text-xs font-bold text-slate-900 dark:text-white">∞</span>
-                    </div>
-                  </td>
-                  <td className="table-data-cell text-center">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400">
-                      Active
-                    </span>
-                  </td>
-                  <td className="table-data-cell text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <button className="action-btn hover:text-primary hover:bg-primary/10"><span className="material-symbols-outlined text-[20px]">edit_note</span></button>
-                      <button className="action-btn hover:text-amber-500 hover:bg-amber-500/10"><span className="material-symbols-outlined text-[20px]">visibility_off</span></button>
-                      <button className="action-btn hover:text-red-500 hover:bg-red-500/10"><span className="material-symbols-outlined text-[20px]">delete_outline</span></button>
-                    </div>
-                  </td>
-                </tr>
-
-                {/* ITEM 3 */}
-                <tr className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors group">
-                  <td className="table-data-cell">
-                    <div className="flex items-center gap-4">
-                      <div className="reward-thumb-box relative overflow-hidden">
-                        <img alt="Reward" className="rounded-md opacity-80 w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDS_oG5cI3Xw7iD5PImY6RuJHcho___jeW5KEqZ1zYuE2rw6iP_Dk1baVFPqF40hToJv5xB1qusiCEZskyyAU7fu9AyXQEgQOv7ZfljRbcZGLnJFkwPfM2KMByFpc7At5MeO_xZqYV27ONSvT7EQbY_giVTF6O-brwpKBnedXk99Ljky3KLAluuaLT92NkDDXnbz_JNXdZYM8y_VwuAcc7WfK-9s8rmM_faXZ_q9W-DKJfaM-M2imQW2_eohJ4RS2J2lvYlk3-QFA"/>
-                        <div className="absolute inset-0 bg-red-500/20 flex items-center justify-center">
-                          <span className="material-symbols-outlined text-red-500 text-xs">priority_high</span>
+                {rewardsData.map((item) => (
+                  <tr key={item.id} className={`hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors group ${item.stock_quantity === 0 ? 'grayscale opacity-70' : ''}`}>
+                    
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center p-1 relative overflow-hidden">
+                          <img src={item.image || "https://images.unsplash.com/photo-1518173946687-a4c8a07d7e02?w=200"} alt={item.name} className="rounded-md opacity-80 object-cover w-full h-full" />
+                        </div>
+                        <div>
+                          <p className="font-bold text-sm text-slate-900 dark:text-white">{item.name}</p>
+                          <p className="text-xs text-slate-400">SKU: REW-{item.id}</p>
                         </div>
                       </div>
-                      <div>
-                        <p className="font-bold text-sm text-slate-900 dark:text-white">Wireless Headphones</p>
-                        <p className="text-xs text-slate-400">SKU: BS-RE-088</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="table-data-cell text-right">
-                    <span className="text-primary font-bold">15,000 pts</span>
-                  </td>
-                  <td className="table-data-cell">
-                    <div className="flex items-center gap-3">
-                      <div className="stock-bar-bg">
-                        <div className="h-full bg-red-500" style={{ width: "4%" }}></div>
-                      </div>
-                      <span className="text-xs font-bold text-red-500">2/50</span>
-                    </div>
-                  </td>
-                  <td className="table-data-cell text-center">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400">
-                      Low Stock
-                    </span>
-                  </td>
-                  <td className="table-data-cell text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <button className="action-btn hover:text-primary hover:bg-primary/10"><span className="material-symbols-outlined text-[20px]">edit_note</span></button>
-                      <button className="action-btn hover:text-amber-500 hover:bg-amber-500/10"><span className="material-symbols-outlined text-[20px]">visibility_off</span></button>
-                      <button className="action-btn hover:text-red-500 hover:bg-red-500/10"><span className="material-symbols-outlined text-[20px]">delete_outline</span></button>
-                    </div>
-                  </td>
-                </tr>
+                    </td>
 
-                {/* ITEM 4 */}
-                <tr className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors group grayscale opacity-70">
-                  <td className="table-data-cell">
-                    <div className="flex items-center gap-4">
-                      <div className="reward-thumb-box">
-                        <img alt="Reward" className="rounded-md opacity-80 w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRkIdelzwM6BX3K7Dm35QpxnHlVYHNgMBB4Bi6f9Dogzv_JgGOn0_d2Sqm8toKHB-_ZKmRXm9ZzkG34Bv3NNyd-NCOSHkL-yyW3RNMKVZS8OrPPteW37xmLy0fvzPik-yJhCdTINkXd-WkdTBp9Gc9Q-VTf5o9H1URyvizDsVZ-VNFVxZBUivGxJQsk3jRmXpjDLs8SZhB1WOV8gWO-7dWBrsxVHSZksJKdxL1EjUF37Co6Rk3OI1hWyM8aV4a-CPvv99iIw9xZg"/>
+                    <td className="px-6 py-4 text-right">
+                      <span className={`${item.stock_quantity === 0 ? 'text-slate-500' : 'text-primary'} font-bold`}>
+                        {item.points_required} pts
+                      </span>
+                    </td>
+
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="flex-1 max-w-[100px] h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                          <div 
+                            className={`h-full ${getStockBarColor(item.stock_quantity, 100)}`} 
+                            style={{ width: `${Math.min((item.stock_quantity / 100) * 100, 100)}%` }}
+                          ></div>
+                        </div>
+                        <span className={`text-xs font-bold ${item.stock_quantity === 0 ? 'text-red-500' : 'text-slate-900 dark:text-white'}`}>
+                          {item.stock_quantity} Left
+                        </span>
                       </div>
-                      <div>
-                        <p className="font-bold text-sm text-slate-900 dark:text-white">Branded Hoodie</p>
-                        <p className="text-xs text-slate-400">SKU: BS-RE-102</p>
+                    </td>
+
+                    <td className="px-6 py-4 text-center">
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(item.stock_quantity)}`}>
+                        {item.stock_quantity > 10 ? 'Active' : item.stock_quantity > 0 ? 'Low Stock' : 'Out of Stock'}
+                      </span>
+                    </td>
+
+                    <td className="px-6 py-4 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        {/* This passes the specific item ID to our new page! */}
+                          <button 
+                            onClick={() => navigate(`/edit-reward/${item.id}`)}
+                            className="p-1.5 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all" 
+                            title="Edit"
+                          >
+                            <span className="material-symbols-outlined text-[20px]">edit_note</span>
+                          </button>
+                        <button 
+                          onClick={() => handleDelete(item.id)} // <--- ADDED THIS!
+                          className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all" 
+                          title="Delete"
+                        >
+                          <span className="material-symbols-outlined text-[20px]">delete_outline</span>
+                        </button>
                       </div>
-                    </div>
-                  </td>
-                  <td className="table-data-cell text-right">
-                    <span className="text-slate-500 font-bold">5,500 pts</span>
-                  </td>
-                  <td className="table-data-cell">
-                    <div className="flex items-center gap-3">
-                      <div className="stock-bar-bg">
-                        <div className="h-full bg-slate-400" style={{ width: "0%" }}></div>
-                      </div>
-                      <span className="text-xs font-bold text-slate-500">0/150</span>
-                    </div>
-                  </td>
-                  <td className="table-data-cell text-center">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-400">
-                      Out of Stock
-                    </span>
-                  </td>
-                  <td className="table-data-cell text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <button className="action-btn hover:text-primary hover:bg-primary/10"><span className="material-symbols-outlined text-[20px]">edit_note</span></button>
-                      <button className="action-btn hover:text-amber-500 hover:bg-amber-500/10"><span className="material-symbols-outlined text-[20px]">visibility</span></button>
-                      <button className="action-btn hover:text-red-500 hover:bg-red-500/10"><span className="material-symbols-outlined text-[20px]">delete_outline</span></button>
-                    </div>
-                  </td>
-                </tr>
+                    </td>
+
+                  </tr>
+                ))}
 
               </tbody>
             </table>
           </div>
-          
-          {/* Pagination */}
-          <div className="px-6 py-4 bg-slate-50 dark:bg-slate-800/30 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
-            <button className="px-4 py-2 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-sm font-medium hover:bg-white dark:hover:bg-slate-800 transition-colors disabled:opacity-50" disabled>Previous</button>
-            <div className="flex items-center gap-2">
-              <button className="w-8 h-8 rounded-lg bg-primary text-white text-sm font-bold">1</button>
-              <button className="w-8 h-8 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">2</button>
-              <button className="w-8 h-8 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">3</button>
-            </div>
-            <button className="px-4 py-2 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-sm font-medium hover:bg-white dark:hover:bg-slate-800 transition-colors">Next</button>
-          </div>
         </div>
-
       </main>
     </div>
   );

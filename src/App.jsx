@@ -16,6 +16,7 @@ import AddReward from './pages/AddReward';
 import ActivityLogs from './pages/ActivityLogs';
 import Settings from './pages/Settings';
 import Profile from './pages/Profile';
+import EditReward from './pages/EditReward';
 
 export default function App() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -86,7 +87,7 @@ export default function App() {
                   <Routes>
                     <Route path="/" element={<Dashboard />} />
                     <Route path="/users" element={<Users />} />
-                    <Route path="/user-details" element={<UserDetails />} />
+                    <Route path="/user-details/:id" element={<UserDetails />} />
                     <Route path="/general" element={<GeneralApp />} />
                     <Route path="/reports" element={<Reports />} />
                     <Route path="/rewards" element={<Rewards />} />
@@ -94,6 +95,7 @@ export default function App() {
                     <Route path="/logs" element={<ActivityLogs />} />
                     <Route path="/settings" element={<Settings />} />
                     <Route path="/profile" element={<Profile />} />
+                    <Route path="/edit-reward/:id" element={<EditReward />} />
                   </Routes>
                 </div>
               </main>

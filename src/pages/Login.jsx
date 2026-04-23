@@ -210,7 +210,7 @@ export default function Login({ setIsAuthenticated }) {
               <div className="space-y-2">
             <div className="flex items-center justify-between pl-1">
               <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Password</label>
-              <a href="#" className="text-[10px] font-bold text-primary hover:text-white transition-colors">Forgot?</a>
+              {/* <a href="#" className="text-[10px] font-bold text-primary hover:text-white transition-colors">Forgot?</a> */}
             </div>
             <div className="relative">
               <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary text-sm z-10">lock</span>
