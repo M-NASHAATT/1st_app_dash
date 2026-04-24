@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { reportService } from '../services/reportService';
+import { useNavigate } from 'react-router-dom';
 
 export default function Reports() {
   const [activeTab, setActiveTab] = useState('All Reports');
-  
+  const navigate = useNavigate(); // Add this line for the report details
+
   // 1. REAL STATE
   const [reports, setReports] = useState([]);
   const [metrics, setMetrics] = useState({}); // To hold the 'total_active_monitored' stat!
@@ -148,8 +150,13 @@ export default function Reports() {
                   
                   {/* ID & Description */}
                   <td className="px-6 py-5">
-                    <div className="flex flex-col">
-                      <span className="text-slate-900 dark:text-white font-bold text-sm font-mono">{report.report_id}</span>
+                    <div 
+                      onClick={() => navigate(`/reports/${report.id}`)}
+                      className="flex flex-col cursor-pointer group/link"
+                    >
+                      <span className="text-slate-900 dark:text-white font-bold text-sm font-mono group-hover/link:text-primary group-hover/link:underline transition-colors">
+                        {report.report_id || `REP-${report.id}`}
+                      </span>
                       <span className="text-[10px] text-slate-500 dark:text-[#92a4c9] font-medium uppercase tracking-tighter truncate max-w-[150px]">
                         {report.description || "Environmental Report"}
                       </span>

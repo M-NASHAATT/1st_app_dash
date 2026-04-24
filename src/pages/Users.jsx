@@ -58,6 +58,12 @@ export default function Users() {
       toast.error("Could not save status to server.");
     }
   };
+  // Add this right below handleStatusChange for the block button
+  const handleBlockUser = (id, name) => {
+    if (window.confirm(`Are you sure you want to block ${name}? They will lose access to the platform.`)) {
+      handleStatusChange(id, 'blocked');
+    }
+  };
 
   const getStatusStyles = (status) => {
     switch (status) {
@@ -131,6 +137,8 @@ export default function Users() {
               <tr className="bg-slate-50 dark:bg-background-dark border-b border-primary/10">
                 <th className="px-6 py-4 text-xs uppercase font-bold text-slate-500">User ID</th>
                 <th className="px-6 py-4 text-xs uppercase font-bold text-slate-500">Full Name</th>
+                <th className="px-6 py-4 text-xs uppercase font-bold text-slate-500">Role</th> 
+
                 <th className="px-6 py-4 text-xs uppercase font-bold text-slate-500">National ID</th>
                 <th className="px-6 py-4 text-xs uppercase font-bold text-slate-500">Account Status</th>
                 <th className="px-6 py-4 text-xs uppercase font-bold text-slate-500 text-right">Actions</th>
@@ -152,17 +160,28 @@ export default function Users() {
                   <td className="px-6 py-4 font-mono text-xs text-primary font-medium">{user.id}</td>
                   
                   <td className="px-6 py-4">
-                    <div 
-                      onClick={() => navigate(`/user-details/${user.id}`)}
-                      className="flex items-center gap-3 cursor-pointer p-2 -ml-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors inline-flex"
-                    >
+                    {/* REMOVED onClick AND cursor-pointer */}
+                    <div className="flex items-center gap-3 p-2 -ml-2 rounded-lg inline-flex">
                       <div className="size-8 rounded-full bg-slate-200 dark:bg-slate-800 bg-cover bg-center" style={{ backgroundImage: `url('${user.avatar || user.profile_picture || "https://i.pravatar.cc/150"}')` }}></div>
                       <div className="flex flex-col">
-                        <span className="text-sm font-bold text-slate-900 dark:text-white hover:text-primary">{user.name}</span>
+                        {/* REMOVED hover:text-primary */}
+                        <span className="text-sm font-bold text-slate-900 dark:text-white">{user.name}</span>
                         <span className="text-xs text-slate-500">{user.email}</span>
                       </div>
                     </div>
                   </td>
+
+                <td className="px-6 py-4">
+                  <span 
+                    className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border
+                      ${user.role?.toLowerCase() === 'admin' ? 'bg-primary/10 text-primary border-primary/20' : 
+                        user.role?.toLowerCase() === 'provider' ? 'bg-indigo-500/10 text-indigo-500 dark:text-indigo-400 border-indigo-500/20' : 
+                        'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700'}
+                    `}
+                  >
+                    {user.role || 'User'}
+                  </span>
+                </td>
                   
                   <td className="px-6 py-4 text-sm text-slate-500">{user.national_id || "N/A"}</td>
                   
@@ -181,8 +200,24 @@ export default function Users() {
                   
                   <td className="px-6 py-4 text-right">
                     <div className="flex items-center justify-end gap-2">
-                      <button className="p-1.5 rounded-lg hover:bg-primary/10 text-slate-400 hover:text-primary transition-colors"><span className="material-symbols-outlined text-lg">visibility</span></button>
-                      <button className="p-1.5 rounded-lg hover:bg-red-500/10 text-slate-400 hover:text-red-500 transition-colors"><span className="material-symbols-outlined text-lg">block</span></button>
+                      
+                      {/* NEW: THE EYE ICON IS BACK! */}
+                      <button 
+                        onClick={() => navigate(`/user-details/${user.id}`)}
+                        className="p-1.5 rounded-lg hover:bg-primary/10 text-slate-400 hover:text-primary transition-colors"
+                        title="View Details"
+                      >
+                        <span className="material-symbols-outlined text-lg">visibility</span>
+                      </button>
+
+                      <button 
+                        onClick={() => handleBlockUser(user.id, user.name)}
+                        className="p-1.5 rounded-lg hover:bg-red-500/10 text-slate-400 hover:text-red-500 transition-colors"
+                        title="Block User"
+                      >
+                        <span className="material-symbols-outlined text-lg">block</span>
+                      </button>
+
                     </div>
                   </td>
                 </tr>
