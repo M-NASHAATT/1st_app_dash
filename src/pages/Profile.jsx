@@ -20,23 +20,30 @@ export default function Profile() {
   const [imagePreview, setImagePreview] = useState(null);
 
   // 2. FETCH PROFILE ON LOAD
+  // 2. FETCH PROFILE ON LOAD
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const responseData = await adminService.getMe();
         console.log("BACKEND ADMIN RESPONSE:", responseData); // X-RAY
 
-        // Unwrap data safely
-        const admin = responseData?.data?.admin || responseData?.data || responseData;
+        // THE ULTIMATE UNWRAPPER
+        const admin = 
+          responseData?.data?.admin || 
+          responseData?.data?.user || 
+          responseData?.admin || 
+          responseData?.user || 
+          responseData?.data || 
+          responseData;
 
         setAdminData({
-          name: admin.name || "",
-          email: admin.email || "",
-          phone: admin.phone || "",
+          name: admin?.name || "",
+          email: admin?.email || "",
+          phone: admin?.phone || "",
           password: "", // Never pre-fill password!
         });
 
-        if (admin.image || admin.avatar) {
+        if (admin?.image || admin?.avatar) {
           setImagePreview(admin.image || admin.avatar);
         }
 
@@ -50,7 +57,7 @@ export default function Profile() {
 
     fetchProfile();
   }, []);
-
+  
   const handleChange = (e) => {
     setAdminData({ ...adminData, [e.target.name]: e.target.value });
   };

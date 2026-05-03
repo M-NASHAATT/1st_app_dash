@@ -120,7 +120,6 @@ export default function Users() {
             placeholder="Search by Name or ID..." type="text" 
           />
         </div>
-        <button className="p-2 border border-primary/20 rounded-lg hover:bg-primary/10 text-slate-500"><span className="material-symbols-outlined">download</span></button>
       </div>
 
       <div className="bg-white dark:bg-primary/5 border border-primary/10 rounded-xl overflow-hidden min-h-[400px] relative">
@@ -132,64 +131,90 @@ export default function Users() {
         )}
 
         <div className="overflow-x-auto custom-scrollbar">
-          <table className="w-full text-left border-collapse min-w-[1000px]">
+          <table className="w-full text-left border-collapse min-w-[1100px]">
             <thead>
               <tr className="bg-slate-50 dark:bg-background-dark border-b border-primary/10">
                 <th className="px-6 py-4 text-xs uppercase font-bold text-slate-500">User ID</th>
+                <th className="px-6 py-4 text-xs uppercase font-bold text-slate-500 w-16">Photo</th>
                 <th className="px-6 py-4 text-xs uppercase font-bold text-slate-500">Full Name</th>
-                <th className="px-6 py-4 text-xs uppercase font-bold text-slate-500">Role</th> 
-
+                <th className="px-6 py-4 text-xs uppercase font-bold text-slate-500">Email Address</th>
                 <th className="px-6 py-4 text-xs uppercase font-bold text-slate-500">National ID</th>
-                <th className="px-6 py-4 text-xs uppercase font-bold text-slate-500">Account Status</th>
+                <th className="px-6 py-4 text-xs uppercase font-bold text-slate-500">Role</th>
+                <th className="px-6 py-4 text-xs uppercase font-bold text-slate-500 text-center">Status</th>
                 <th className="px-6 py-4 text-xs uppercase font-bold text-slate-500 text-right">Actions</th>
               </tr>
             </thead>
             
-            <tbody className="divide-y divide-primary/5">
+            <tbody className="divide-y divide-primary/5 dark:divide-slate-800/50">
               
+              {/* EMPTY STATE */}
               {!isLoading && currentUsers.length === 0 && (
                 <tr>
-                  <td colSpan="5" className="text-center py-8 text-slate-500">
+                  <td colSpan="8" className="text-center py-8 text-slate-500">
                     No users found.
                   </td>
                 </tr>
               )}
 
+              {/* DYNAMIC ROWS */}
               {currentUsers.map((user) => (
-                <tr key={user.id} className="hover:bg-primary/5 transition-colors group">
-                  <td className="px-6 py-4 font-mono text-xs text-primary font-medium">{user.id}</td>
+                <tr key={user.id} className="hover:bg-primary/5 dark:hover:bg-slate-800/30 transition-colors group">
                   
+                  {/* 1. USER ID (Now Clickable!) */}
                   <td className="px-6 py-4">
-                    {/* REMOVED onClick AND cursor-pointer */}
-                    <div className="flex items-center gap-3 p-2 -ml-2 rounded-lg inline-flex">
-                      <div className="size-8 rounded-full bg-slate-200 dark:bg-slate-800 bg-cover bg-center" style={{ backgroundImage: `url('${user.avatar || user.profile_picture || "https://i.pravatar.cc/150"}')` }}></div>
-                      <div className="flex flex-col">
-                        {/* REMOVED hover:text-primary */}
-                        <span className="text-sm font-bold text-slate-900 dark:text-white">{user.name}</span>
-                        <span className="text-xs text-slate-500">{user.email}</span>
-                      </div>
-                    </div>
+                    <button 
+                      onClick={() => navigate(`/user-details/${user.id}`)}
+                      className="font-mono text-xs font-bold text-primary hover:underline hover:text-blue-600 transition-colors"
+                    >
+                      {user.user_id || `US-${user.id}`}
+                    </button>
+                  </td>
+                  
+                  {/* 2. PHOTO COLUMN (Separated) */}
+                  <td className="px-6 py-4">
+                    <div 
+                      className="size-10 rounded-full bg-slate-200 dark:bg-slate-800 bg-cover bg-center border border-slate-300 dark:border-slate-700 shadow-sm" 
+                      style={{ backgroundImage: `url('${user.image || "https://api.dicebear.com/7.x/initials/svg?seed=" + user.name}')` }}
+                    ></div>
                   </td>
 
-                <td className="px-6 py-4">
-                  <span 
-                    className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border
-                      ${user.role?.toLowerCase() === 'admin' ? 'bg-primary/10 text-primary border-primary/20' : 
-                        user.role?.toLowerCase() === 'provider' ? 'bg-indigo-500/10 text-indigo-500 dark:text-indigo-400 border-indigo-500/20' : 
-                        'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700'}
-                    `}
-                  >
-                    {user.role || 'User'}
-                  </span>
-                </td>
-                  
-                  <td className="px-6 py-4 text-sm text-slate-500">{user.national_id || "N/A"}</td>
-                  
+                  {/* 3. FULL NAME */}
                   <td className="px-6 py-4">
+                    <span className="text-sm font-bold text-slate-900 dark:text-white">
+                      {user.name}
+                    </span>
+                  </td>
+
+                  {/* 4. EMAIL */}
+                  <td className="px-6 py-4">
+                    <span className="text-sm text-slate-500 dark:text-slate-400">
+                      {user.email}
+                    </span>
+                  </td>
+                  
+                  {/* 5. NATIONAL ID */}
+                  <td className="px-6 py-4 text-sm text-slate-500 dark:text-slate-400">
+                    {user.national_id || "N/A"}
+                  </td>
+
+                  {/* 6. ROLE */}
+                  <td className="px-6 py-4">
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border
+                        ${user.role?.toLowerCase() === 'admin' ? 'bg-primary/10 text-primary border-primary/20' : 
+                          user.role?.toLowerCase() === 'provider' ? 'bg-indigo-500/10 text-indigo-500 dark:text-indigo-400 border-indigo-500/20' : 
+                          'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700'}
+                      `}
+                    >
+                      {user.role || 'User'}
+                    </span>
+                  </td>
+                  
+                  {/* 7. STATUS DROPDOWN */}
+                  <td className="px-6 py-4 text-center">
                     <select
-                      value={user.status}
+                      value={user.status?.toLowerCase() || "active"}
                       onChange={(e) => handleStatusChange(user.id, e.target.value)}
-                      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border outline-none cursor-pointer appearance-none text-center ${getStatusStyles(user.status)}`}
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border outline-none cursor-pointer appearance-none text-center ${getStatusStyles(user.status)}`}
                       style={{ textAlignLast: "center" }}
                     >
                       <option value="active" className="text-slate-900 bg-white">Active</option>
@@ -198,10 +223,9 @@ export default function Users() {
                     </select>
                   </td>
                   
+                  {/* 8. ACTIONS */}
                   <td className="px-6 py-4 text-right">
                     <div className="flex items-center justify-end gap-2">
-                      
-                      {/* NEW: THE EYE ICON IS BACK! */}
                       <button 
                         onClick={() => navigate(`/user-details/${user.id}`)}
                         className="p-1.5 rounded-lg hover:bg-primary/10 text-slate-400 hover:text-primary transition-colors"
@@ -209,7 +233,6 @@ export default function Users() {
                       >
                         <span className="material-symbols-outlined text-lg">visibility</span>
                       </button>
-
                       <button 
                         onClick={() => handleBlockUser(user.id, user.name)}
                         className="p-1.5 rounded-lg hover:bg-red-500/10 text-slate-400 hover:text-red-500 transition-colors"
@@ -217,9 +240,9 @@ export default function Users() {
                       >
                         <span className="material-symbols-outlined text-lg">block</span>
                       </button>
-
                     </div>
                   </td>
+
                 </tr>
               ))}
             </tbody>

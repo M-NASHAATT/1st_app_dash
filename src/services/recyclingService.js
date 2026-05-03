@@ -22,6 +22,14 @@ export const recyclingService = {
     });
     return response.data;
   },
+  
+updateBatch: async (batchId, formData) => {
+    // If you are sending images, Laravel needs POST and _method=PUT
+    const response = await api.post(`/admin/batches/${batchId}`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+  },
 
   deleteBatch: async (batchId) => {
     const response = await api.delete(`/admin/batches/${batchId}`);

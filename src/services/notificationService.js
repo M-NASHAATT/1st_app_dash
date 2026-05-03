@@ -8,17 +8,27 @@ export const notificationService = {
     return response.data;
   },
 
-  // 2. Clear a specific notification
-  clearNotification: async (id) => {
-    // Docs say POST /{id}/read marks it as read. 
-    // If you want it completely deleted, you can change this to .delete(`/${id}`)
-    const response = await api.post(`/user/notifications/${id}/read`);
+  // 2. Mark a specific notification as Read
+  markAsRead: async (id) => {
+    const response = await api.post(`/admin/notifications/${id}/read`);
     return response.data;
   },
 
-  // 3. Clear ALL notifications
+  // 3. Mark ALL notifications as Read
+  markAllAsRead: async () => {
+    const response = await api.post('/admin/notifications/mark-all-read');
+    return response.data;
+  },
+
+  // 4. Delete a specific notification entirely
+  clearNotification: async (id) => {
+    const response = await api.delete(`/admin/notifications/${id}`);
+    return response.data;
+  },
+
+  // 5. Delete ALL notifications entirely
   clearAll: async () => {
-    const response = await api.post('/user/notifications/mark-all-read');
+    const response = await api.delete('/admin/notifications');
     return response.data;
   }
 };

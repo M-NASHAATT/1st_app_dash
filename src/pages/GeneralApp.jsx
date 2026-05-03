@@ -46,7 +46,7 @@ export default function GeneralApp() {
   const wasteDistribution = overviewData?.waste_distribution || { plastic: 0, organic: 0, hazardous: 0 };
 
   return (
-    <div className="flex flex-col gap-8 h-full p-8">
+    <div className="flex flex-col gap-8 p-6 lg:p-8 mb-5">
       
       {/* --- METRICS BAR --- */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 shrink-0">

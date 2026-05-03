@@ -70,7 +70,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
               onClick={() => setIsMainAppOpen(!isMainAppOpen)}
               className="w-full flex items-center justify-between px-2 mb-2 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors"
             >
-              <span className="text-[10px] uppercase tracking-widest font-bold text-primary">Sentinel App</span>
+              <span className="text-[15px] uppercase tracking-widest font-bold text-white">Blue Report</span>
               <span className="material-symbols-outlined text-sm">{isMainAppOpen ? 'expand_more' : 'chevron_right'}</span>
             </button>
             
@@ -98,7 +98,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
               onClick={() => setIsRecyclingOpen(!isRecyclingOpen)}
               className="w-full flex items-center justify-between px-2 mb-2 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors"
             >
-              <span className="text-[10px] uppercase tracking-widest font-bold text-emerald-500">Procurement App</span>
+              <span className="text-[15px] uppercase tracking-widest font-bold text-white">Blue Cycle</span>
               <span className="material-symbols-outlined text-sm">{isRecyclingOpen ? 'expand_more' : 'chevron_right'}</span>
             </button>
 

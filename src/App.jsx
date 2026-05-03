@@ -22,6 +22,7 @@ import EditReward from './pages/EditReward';
 
 import RecyclingInventory from './pages/RecyclingInventory';
   import AddBatch from './pages/AddBatch';
+  import EditBatch from './pages/EditBatch';
 
 import RecyclingOrders from './pages/RecyclingOrders';
   import RecyclingOrderDetails from './pages/RecyclingOrderDetails';
@@ -49,6 +50,23 @@ export default function App() {
       localStorage.setItem("theme", "light");
     }
   }, [isDarkMode]);
+
+  // FIX: AUTOMATICALLY RE-OPEN SIDEBAR ON DESKTOP
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setIsSidebarOpen(true); // Force open on Desktop
+      } else {
+        setIsSidebarOpen(false); // Force close on Mobile
+      }
+    };
+
+    // Listen for window resize events
+    window.addEventListener('resize', handleResize);
+    
+    // Clean up the listener when the component unmounts
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const toggleDark = () => setIsDarkMode(!isDarkMode);
 
@@ -110,6 +128,7 @@ export default function App() {
                      {/* NEW RECYCLING APP ROUTE */}
                     <Route path="/recycling/inventory" element={<RecyclingInventory />} />
                       <Route path="/recycling/add-batch" element={<AddBatch />} />
+                      <Route path="/recycling/edit-batch/:id" element={<EditBatch />} />
                       
                     <Route path="/recycling/orders" element={<RecyclingOrders />} />
                       <Route path="/recycling/orders/:id" element={<RecyclingOrderDetails />} />

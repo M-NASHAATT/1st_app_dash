@@ -11,18 +11,25 @@ export default function RecyclingOrders() {
   const [isLoading, setIsLoading] = useState(true);
 
   // 2. FETCH THE ORDERS
+  // 2. FETCH THE ORDERS
   useEffect(() => {
     const fetchOrders = async () => {
       try {
         const responseData = await recyclingService.getAllOrders();
         console.log("BACKEND ORDERS RESPONSE:", responseData); // X-RAY
 
-        // The Ultimate Laravel Unwrapper
+        // THE ULTIMATE LARAVEL UNWRAPPER (Updated for orders.result)
         let ordersArray = [];
-        if (Array.isArray(responseData)) ordersArray = responseData;
-        else if (Array.isArray(responseData?.data?.data)) ordersArray = responseData.data.data;
-        else if (Array.isArray(responseData?.data)) ordersArray = responseData.data;
-        else if (Array.isArray(responseData?.orders)) ordersArray = responseData.orders;
+        
+        if (Array.isArray(responseData?.data?.orders?.result)) {
+          ordersArray = responseData.data.orders.result; 
+        } else if (Array.isArray(responseData?.orders?.result)) {
+          ordersArray = responseData.orders.result; 
+        } else if (Array.isArray(responseData?.data?.result)) {
+          ordersArray = responseData.data.result;
+        } else if (Array.isArray(responseData?.data?.data)) {
+          ordersArray = responseData.data.data;
+        }
 
         setOrders(ordersArray);
         setIsLoading(false);
